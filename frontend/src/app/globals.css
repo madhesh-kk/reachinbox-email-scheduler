@@ -1,0 +1,17 @@
+@tailwind base;@tailwind components;@tailwind utilities;
+*{box-sizing:border-box} 
+body{margin:0;background:#fff;color:#27313d;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;font-size:15px;line-height:1.5}
+button,input,textarea,select{font:inherit}
+.card{background:white;border:1px solid #e5e7eb;border-radius:10px}
+.field{width:100%;border:0;border-bottom:1px solid #e5e7eb;padding:14px 16px;outline:none;font-size:15px}
+.field:focus{border-color:#10b981}
+.btn{border-radius:8px;padding:12px 24px;font-weight:600;cursor:pointer;font-size:15px}
+.btn-primary{background:#10b981;color:white;border:1px solid #10b981}
+.btn-primary:hover{background:#059669}
+.btn-outline{background:white;color:#10b981;border:1px solid #10b981}
+.btn-outline:hover{background:#f0fdf4}
+.icon-btn{color:#6b7280;background:transparent;border:0;cursor:pointer;font-size:18px;padding:6px}
+.icon-btn:hover{color:#374151}
+.text-brand{color:#10b981}
+.bg-brand{background:#10b981}
+.border-brand{border-color:#10b981}

@@ -1,0 +1,1 @@
+export type EmailJob={id:string;toEmail:string;subject:string;body:string;attachments?:string|null;status:string;scheduledAt:string;sentAt?:string;sender:{fromEmail:string}}; export type User={id:string;name:string;email:string;avatarUrl?:string;slackChannel?:string|null};

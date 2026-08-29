@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+model User {
+  id String @id @default(cuid())
+  googleId String? @unique
+  email String @unique
+  password String?
+  name String
+  avatarUrl String?
+  slackTeamId String?
+  slackAccessToken String?
+  slackChannel String?
+  slackWebhookUrl String?
+  createdAt DateTime @default(now())
+  senders Sender[]
+  emails EmailJob[]
+}
+model Sender {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields:[userId],references:[id])
+  fromEmail String
+  smtpUser String
+  smtpPass String
+  emails EmailJob[]
+}
+model EmailJob {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields:[userId],references:[id])
+  senderId String
+  sender Sender @relation(fields:[senderId],references:[id])
+  toEmail String
+  subject String
+  body String
+  attachments String? @db.LongText
+  useEthereal Boolean @default(false)
+  scheduledAt DateTime
+  delayMs Int
+  hourlyLimit Int
+  status EmailStatus @default(SCHEDULED)
+  bullJobId String? @unique
+  sentAt DateTime?
+  error String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([status, scheduledAt])
+}
+enum EmailStatus {
+  SCHEDULED
+  QUEUED
+  SENT
+  FAILED
+  DELAYED_RATE_LIMIT
+}

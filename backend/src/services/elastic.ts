@@ -1,0 +1,4 @@
+import { Client } from '@elastic/elasticsearch'; import { env } from '../config/env';
+export const elastic = new Client({node:env.ELASTICSEARCH_URL});
+export async function ensureIndex(){ try { await elastic.indices.create({index:'emails',mappings:{properties:{toEmail:{type:'keyword'},subject:{type:'text'},body:{type:'text'},status:{type:'keyword'},scheduledAt:{type:'date'},sentAt:{type:'date'},senderId:{type:'keyword'},userId:{type:'keyword'}}}}).catch(()=>undefined); } catch { console.warn('Elasticsearch not available - search will be disabled'); } }
+export async function indexEmail(record:Record<string,unknown>){ try { await elastic.index({index:'emails',id:String(record.id),document:record}); } catch (err) { console.warn('Elasticsearch indexing failed:', err instanceof Error ? err.message : 'unknown'); } }

@@ -1,0 +1,4 @@
+import { Queue } from 'bullmq'; import { redis } from '../redis/client'; import { prisma } from '../db/prisma';
+export const emailQueue=new Queue('emails',{connection:redis});
+export async function enqueueEmailJob(email:{id:string;scheduledAt:Date}) { const delay=Math.max(0,email.scheduledAt.getTime()-Date.now()); await emailQueue.add('send-email',{emailJobId:email.id},{jobId:email.id,delay,removeOnComplete:true,removeOnFail:false,attempts:3,backoff:{type:'exponential',delay:5000}}); return prisma.emailJob.update({where:{id:email.id},data:{status:'QUEUED',bullJobId:email.id}}); }
+export async function reconcileOrphans(){ const scheduled=await prisma.emailJob.findMany({where:{status:{in:['SCHEDULED','QUEUED','DELAYED_RATE_LIMIT']}}}); for(const email of scheduled){ if(!(await emailQueue.getJob(email.id))) await enqueueEmailJob(email); } }
