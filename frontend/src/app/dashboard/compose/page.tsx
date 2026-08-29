@@ -21,11 +21,7 @@ export default function Compose() {
   const [recipients, setRecipients] = useState<string[]>([]);
   const [recipient, setRecipient] = useState('');
   const [subject, setSubject] = useState('');
-  const [startTime, setStartTime] = useState(() => {
-    const now = new Date();
-    now.setMinutes(now.getMinutes() + 10); // Default to 10 minutes from now
-    return now.toISOString().slice(0, 16);
-  });
+  const [startTime, setStartTime] = useState('');
   const [delay, setDelay] = useState('2');
   const [limit, setLimit] = useState('200');
   const [later, setLater] = useState(false);
@@ -223,7 +219,21 @@ export default function Compose() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
               </svg>
             </button>
-            <button className="p-2 hover:bg-slate-100 rounded" title="Schedule" onClick={() => setLater(!later)}>
+            <button className="p-2 hover:bg-slate-100 rounded" title="Schedule" onClick={() => {
+              // Set current LOCAL time when opening modal
+              const now = new Date();
+              now.setMinutes(now.getMinutes() + 10); // 10 minutes from now
+              
+              // Format as local datetime-local string (YYYY-MM-DDTHH:mm)
+              const year = now.getFullYear();
+              const month = String(now.getMonth() + 1).padStart(2, '0');
+              const day = String(now.getDate()).padStart(2, '0');
+              const hours = String(now.getHours()).padStart(2, '0');
+              const minutes = String(now.getMinutes()).padStart(2, '0');
+              
+              setStartTime(`${year}-${month}-${day}T${hours}:${minutes}`);
+              setLater(!later);
+            }}>
               <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -405,7 +415,15 @@ export default function Compose() {
               <div className="space-y-2 mb-5">
                 <button
                   className="block w-full text-left px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 rounded"
-                  onClick={() => setStartTime(new Date(Date.now() + 864e5).toISOString().slice(0, 16))}
+                  onClick={() => {
+                    const tomorrow = new Date(Date.now() + 864e5);
+                    const year = tomorrow.getFullYear();
+                    const month = String(tomorrow.getMonth() + 1).padStart(2, '0');
+                    const day = String(tomorrow.getDate()).padStart(2, '0');
+                    const hours = String(tomorrow.getHours()).padStart(2, '0');
+                    const minutes = String(tomorrow.getMinutes()).padStart(2, '0');
+                    setStartTime(`${year}-${month}-${day}T${hours}:${minutes}`);
+                  }}
                 >
                   Tomorrow
                 </button>
@@ -414,7 +432,10 @@ export default function Compose() {
                   onClick={() => {
                     const tomorrow = new Date(Date.now() + 864e5);
                     tomorrow.setHours(10, 0, 0, 0);
-                    setStartTime(tomorrow.toISOString().slice(0, 16));
+                    const year = tomorrow.getFullYear();
+                    const month = String(tomorrow.getMonth() + 1).padStart(2, '0');
+                    const day = String(tomorrow.getDate()).padStart(2, '0');
+                    setStartTime(`${year}-${month}-${day}T10:00`);
                   }}
                 >
                   Tomorrow, 10:00 AM
@@ -424,7 +445,10 @@ export default function Compose() {
                   onClick={() => {
                     const tomorrow = new Date(Date.now() + 864e5);
                     tomorrow.setHours(11, 0, 0, 0);
-                    setStartTime(tomorrow.toISOString().slice(0, 16));
+                    const year = tomorrow.getFullYear();
+                    const month = String(tomorrow.getMonth() + 1).padStart(2, '0');
+                    const day = String(tomorrow.getDate()).padStart(2, '0');
+                    setStartTime(`${year}-${month}-${day}T11:00`);
                   }}
                 >
                   Tomorrow, 11:00 AM
@@ -434,7 +458,10 @@ export default function Compose() {
                   onClick={() => {
                     const tomorrow = new Date(Date.now() + 864e5);
                     tomorrow.setHours(15, 0, 0, 0);
-                    setStartTime(tomorrow.toISOString().slice(0, 16));
+                    const year = tomorrow.getFullYear();
+                    const month = String(tomorrow.getMonth() + 1).padStart(2, '0');
+                    const day = String(tomorrow.getDate()).padStart(2, '0');
+                    setStartTime(`${year}-${month}-${day}T15:00`);
                   }}
                 >
                   Tomorrow, 3:00 PM
